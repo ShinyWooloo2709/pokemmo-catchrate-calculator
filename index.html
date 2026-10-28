@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
 <meta name="description" content="PokeMMO offline Catchrate Calculator · Pokemmo Tool · species-specific ball bonuses">
-<title>Catchrate Calculator · PokeMMO Tool (V7.5)</title><style>
+<title>Catchrate Calculator · PokeMMO Tool (1.0)</title><style>
   :root {color-scheme:dark; --bg:#0b101b; --panel:#141e2b; --panel2:#192637; --stroke:#2b3d51; --text:#f1f5fa; --muted:#aabace; --accent:#77e3d1; --accent2:#83b9fb; --green:#71e9b4; --yellow:#ffd88e; --red:#ff929a; --shadow:0 18px 60px rgba(0,0,0,.25)}
   * {box-sizing:border-box}
   body{margin:0;min-height:100vh;color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(ellipse 75% 35% at 20% -10%,#1c4350 0%,transparent 75%),radial-gradient(ellipse 45% 30% at 110% 5%,#25304f 0%,transparent 85%),var(--bg)}
@@ -281,7 +281,7 @@ th:nth-child(2),th:nth-child(3),th:nth-child(4),th:nth-child(5){width:15.5%}
  .guide-notes{padding:19px}
 }
 
-/* V7.5 · Two selectors and a single percentage column. */
+/* Release 1.0 · Two selectors and a single percentage column. */
 .target-controls{display:flex;flex-direction:column;gap:13px}
 .target-field{display:flex;flex-direction:column;gap:5px}
 .target-field label{font-size:12px;font-weight:750;color:#c1cfe0}
@@ -303,7 +303,7 @@ th:nth-child(2),th:nth-child(3),th:nth-child(4),th:nth-child(5){width:15.5%}
   .scenario-muted{flex-basis:100%}
 }
 </style></head><body><main>
-<header class="head"><span class="brand-ball" aria-hidden="true"></span><div><strong>PokeMMO Tool · V7.5</strong></div></header>
+<header class="head"><span class="brand-ball" aria-hidden="true"></span><div><strong>PokeMMO Tool · 1.0</strong></div></header>
 <section class="hero"><h1>Catchrate <span>Calculator</span></h1><p class="lead">Search a Pokémon, choose its HP and status, and compare catch chances.</p></section>
 <nav class="tool-tabs" role="tablist" aria-label="Calculator sections">
   <button type="button" class="tool-tab active" role="tab" id="tab-catch" aria-selected="true" aria-controls="pane-catch" data-panel="catch">Catch Rates</button>
@@ -313,7 +313,7 @@ th:nth-child(2),th:nth-child(3),th:nth-child(4),th:nth-child(5){width:15.5%}
 <div id="pane-catch" role="tabpanel" aria-labelledby="tab-catch">
 <div class="top-grid">
   <section class="panel"><h2 class="section-label">01 / Find your Pokémon</h2><div class="picker" id="picker">
-    <div class="search-wrapper"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="species" type="text" role="combobox" aria-label="Search Pokémon species" aria-autocomplete="list" aria-controls="suggestions" aria-expanded="false" autocomplete="off" spellcheck="false" placeholder="Search 649 Pokémon..."></div>
+    <div class="search-wrapper"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="species" type="text" role="combobox" aria-label="Search Pokémon species" aria-autocomplete="list" aria-controls="suggestions" aria-expanded="false" autocomplete="off" spellcheck="false" placeholder="Search Pokémon name or Pokédex #..."></div>
     <div class="suggestions" id="suggestions" role="listbox" hidden></div></div>
     <div class="selected"><div class="mon-sprite-wrap"><img id="monsprite" alt="Bulbasaur front sprite" width="96" height="96"></div><div class="poke-meta"><div class="pkmn-name" id="chosen">Bulbasaur</div><div class="tagline" id="dex">National Dex #001</div><div class="types" id="types"></div></div><div class="rate-pill"><small>Base catch rate</small><b id="baserate">45</b></div></div>
   </section>
@@ -617,16 +617,16 @@ function calculate(){
 function matches(q){q=q.trim().toLocaleLowerCase();if(!q)return POKEMON.slice(0,12);return POKEMON.filter(p=>p.name.toLocaleLowerCase().includes(q)||String(p.id).startsWith(q)).slice(0,16);}
 function hide(){suggestions.hidden=true;species.setAttribute('aria-expanded','false');active=-1;}
 function renderSuggestions(){visible=matches(species.value);active=-1;if(!visible.length){suggestions.innerHTML='<div class="suggestion">No matches found</div>';}else{suggestions.innerHTML=visible.map((p,i)=>`<button type="button" class="suggestion" role="option" data-i="${i}"><span class="suggestion-main"><img class="suggestion-mon" src="${iconSprite(p.id)}" alt="" width="32" height="32"><span>${p.name}</span></span><span class="dexno">#${String(p.id).padStart(3,'0')}</span></button>`).join('');}suggestions.hidden=false;species.setAttribute('aria-expanded','true');}
-function select(p){chosen=p;species.value=p.name;hide();calculate();}
+function select(p){chosen=p;species.value="";hide();calculate();}
 species.addEventListener('focus',renderSuggestions);
 species.addEventListener('input',()=>{const exact=POKEMON.find(p=>p.name.toLocaleLowerCase()===species.value.trim().toLocaleLowerCase());if(exact){chosen=exact;calculate();}renderSuggestions();});
 species.addEventListener('keydown',e=>{
- if(e.key==='Escape'){hide();species.value=chosen.name;return;}
+ if(e.key==='Escape'){hide();species.value='';return;}
  if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(suggestions.hidden)renderSuggestions();if(visible.length){active=(active+(e.key==='ArrowDown'?1:-1)+visible.length)%visible.length;[...suggestions.querySelectorAll('button')].forEach((n,i)=>n.classList.toggle('active',i===active));suggestions.querySelectorAll('button')[active]?.scrollIntoView({block:'nearest'});}return;}
  if(e.key==='Enter'){e.preventDefault();if(active>=0&&visible[active])select(visible[active]);else{const exact=POKEMON.find(p=>p.name.toLocaleLowerCase()===species.value.trim().toLocaleLowerCase());select(exact||visible[0]||chosen);}}
 });
 suggestions.addEventListener('pointerdown',e=>{const item=e.target.closest('button[data-i]');if(item){e.preventDefault();select(visible[Number(item.dataset.i)]);}});
-document.addEventListener('pointerdown',e=>{if(!picker.contains(e.target)){hide();if(species.value!==chosen.name)species.value=chosen.name;}});
+document.addEventListener('pointerdown',e=>{if(!picker.contains(e.target)){hide();if(species.value)species.value='';}});
 
 // V7 shop reference: NPC Pokéyen costs are taken from the user-confirmed
 // PokeMMO ShoutWiki Poké Ball overview (NOT individual ball pages).

@@ -21,7 +21,3 @@ PokeMMO ball mechanics and shop references: [PokeMMO Wiki](https://pokemmo.shout
 Pokémon and item imagery is included in the standalone HTML from game resources provided by the project creator.
 
 Unofficial community project. Not affiliated with or endorsed by PokeMMO or the Pokémon rights holders. Pokémon-related names and artwork belong to their respective owners.
-
-## Version
-
-v7.5 — original standalone browser version, packaged for GitHub Pages without changes to calculations.
